@@ -1,0 +1,480 @@
+{
+  "name": "AI Powered Client Onboarding Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "events": [
+          "invitee.created"
+        ]
+      },
+      "type": "n8n-nodes-base.calendlyTrigger",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        48
+      ],
+      "id": "e0719767-d535-4d67-ab79-504b77095acd",
+      "name": "Calendly Trigger",
+      "webhookId": "13f0a590-d66d-48bf-b1db-3e0ec7cb070d",
+      "credentials": {
+        "calendlyOAuth2Api": {
+          "id": "LPcGB9yXbduoI3T3",
+          "name": "Calendly Onboarding"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "88fc9261-0960-4063-8b1f-7fc3c510fc8c",
+              "name": "email",
+              "value": "={{ $json.payload.email }}",
+              "type": "string"
+            },
+            {
+              "id": "fcfae9c6-2f17-4fa6-bee7-21a372a6afee",
+              "name": "Full Name",
+              "value": "={{ $json.payload.name }}",
+              "type": "string"
+            },
+            {
+              "id": "0f86530b-9ae2-427e-973f-56b612329eb1",
+              "name": "First Name",
+              "value": "={{ $json.payload.name.split(' ')[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "4b033e4f-6d33-4463-98c0-93f9f1bf5231",
+              "name": "needs",
+              "value": "={{ $json.payload.questions_and_answers[0].answer }}",
+              "type": "string"
+            },
+            {
+              "id": "c3b7c129-bf2b-4264-839b-76026e769d73",
+              "name": "Meeting Time",
+              "value": "={{ $('Calendly Trigger').item.json.payload.scheduled_event.start_time }}",
+              "type": "string"
+            },
+            {
+              "id": "ad9aa7c9-6ae5-4191-9d3c-323e26f1f172",
+              "name": "Meeting Link",
+              "value": "={{ $('Calendly Trigger').item.json.payload.scheduled_event.location.join_url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        16,
+        -16
+      ],
+      "id": "fcc39a30-9361-4789-93b8-580e638f3f01",
+      "name": "setData"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "554116a5-d115-482a-a2aa-127ef95229ad",
+              "leftValue": "={{ $json.payload.scheduled_event.event_type }}",
+              "rightValue": "2968d0aa-8603-4f34-9684-e2adfc63621a",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -208,
+        48
+      ],
+      "id": "24f24656-bf74-446a-ba8d-51f826bb9c23",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        0,
+        144
+      ],
+      "id": "5c3a9e8b-839a-4156-9b20-e94cf60eecfd",
+      "name": "No Operation, do nothing1"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appxuBddB5c6f7Uk8",
+          "mode": "list",
+          "cachedResultName": "Onboarding",
+          "cachedResultUrl": "https://airtable.com/appxuBddB5c6f7Uk8"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl7ZapXZYKcRP5SA",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appxuBddB5c6f7Uk8/tbl7ZapXZYKcRP5SA"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json['Full Name'] }}",
+            "Emails": "={{ $json.email }}",
+            "Client Needs": "={{ $json.needs }}",
+            "Status": "New Lead",
+            "Meeting Time": "={{ $json['Meeting Time'] }}",
+            "Meeting Link": "={{ $json['Meeting Link'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Client Needs",
+              "displayName": "Client Needs",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Emails",
+              "displayName": "Emails",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Meeting Time",
+              "displayName": "Meeting Time",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Meeting Link",
+              "displayName": "Meeting Link",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Welcome Email",
+              "displayName": "Welcome Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "New Lead",
+                  "value": "New Lead"
+                },
+                {
+                  "name": "Onboarded",
+                  "value": "Onboarded"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        224,
+        -16
+      ],
+      "id": "f94fd8c1-9663-4432-ab15-15eeacf06386",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "aw4B7vYvVK2GdiE2",
+          "name": "Onboarding"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Client First Name:{{ $('setData').item.json['First Name'] }}\nClient Needs:{{ $('setData').item.json.needs }}\nMeeting Time: {{ $json.fields['Meeting Time'] }}\nMeeting Link: {{ $json.fields['Meeting Link'] }}"
+            },
+            {
+              "content": "You are a professional client onboarding assistant.\nYour task is to write a short, personalized message (2–4 sentences) for a new client who has already booked a call.\n\nYou will be given:\n\nThe client’s first name\n\nA brief description of their business or goals\n\nThe confirmed meeting time\n\nThe meeting link\n\nYour message must:\n\nGreet the client by name\n\nAcknowledge that their call is confirmed\n\nMention the meeting time naturally\n\nInclude the meeting link\n\nReference their business or goals naturally\n\nExpress anticipation for the upcoming conversation\n\nMaintain a friendly, confident, and concise tone (no fluff or filler)\n\nExample output:\n“Hey Sarah — thanks for booking your call. Excited to connect and explore how we can streamline your content workflow with automation. Talk soon.”",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        432,
+        -16
+      ],
+      "id": "de80ba3a-c2a3-4a73-90e4-95b64a8431ab",
+      "name": "AI Personalization1",
+      "credentials": {
+        "openAiApi": {
+          "id": "8eDCvFTclK0zpAFW",
+          "name": "OpenAi account 7"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('If').item.json.payload.email }}",
+        "subject": "Your onboarding session is confirmed",
+        "message": "={{ $json.message.content }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        784,
+        -16
+      ],
+      "id": "79cd97bc-e5f9-4f1b-9180-bde1895dcbf1",
+      "name": "Send a message",
+      "webhookId": "19c2d57c-9d51-48af-b167-8316700d5644",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gysa3iMEGe7UauGf",
+          "name": "Gmail account 4"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Calendly Trigger": [
+      {
+        "json": {
+          "created_at": "2025-11-16T22:30:41.000000Z",
+          "created_by": "https://api.calendly.com/users/4dcc909d-2e36-4f0e-be9c-2cb4e539dbe5",
+          "event": "invitee.created",
+          "payload": {
+            "cancel_url": "https://calendly.com/cancellations/3cdc5f32-a755-411c-a1fa-4bd0de4d506a",
+            "created_at": "2025-11-16T22:30:40.539980Z",
+            "email": "khansadentistry@gmail.com",
+            "event": "https://api.calendly.com/scheduled_events/c2045fa6-291c-4da4-9be5-032e4a1b86f7",
+            "first_name": null,
+            "invitee_scheduled_by": null,
+            "last_name": null,
+            "name": "Dr.Ibrahim",
+            "new_invitee": null,
+            "no_show": null,
+            "old_invitee": null,
+            "payment": null,
+            "questions_and_answers": [
+              {
+                "answer": "i need some sweet automations",
+                "position": 0,
+                "question": "Please share anything that will help prepare for our meeting."
+              }
+            ],
+            "reconfirmation": null,
+            "reschedule_url": "https://calendly.com/reschedulings/3cdc5f32-a755-411c-a1fa-4bd0de4d506a",
+            "rescheduled": false,
+            "routing_form_submission": null,
+            "scheduled_event": {
+              "created_at": "2025-11-16T22:30:40.497345Z",
+              "end_time": "2025-11-18T15:00:00.000000Z",
+              "event_guests": [],
+              "event_memberships": [
+                {
+                  "user": "https://api.calendly.com/users/4dcc909d-2e36-4f0e-be9c-2cb4e539dbe5",
+                  "user_email": "issakhansa21@gmail.com",
+                  "user_name": "Issa khansa"
+                }
+              ],
+              "event_type": "https://api.calendly.com/event_types/2968d0aa-8603-4f34-9684-e2adfc63621a",
+              "invitees_counter": {
+                "total": 1,
+                "active": 1,
+                "limit": 1
+              },
+              "location": {
+                "join_url": "https://calendly.com/events/c2045fa6-291c-4da4-9be5-032e4a1b86f7/google_meet",
+                "status": "processing",
+                "type": "google_conference"
+              },
+              "meeting_notes_html": null,
+              "meeting_notes_plain": null,
+              "name": "n8n test",
+              "start_time": "2025-11-18T14:30:00.000000Z",
+              "status": "active",
+              "updated_at": "2025-11-16T22:30:40.497345Z",
+              "uri": "https://api.calendly.com/scheduled_events/c2045fa6-291c-4da4-9be5-032e4a1b86f7"
+            },
+            "scheduling_method": null,
+            "status": "active",
+            "text_reminder_number": null,
+            "timezone": "Asia/Beirut",
+            "tracking": {
+              "utm_campaign": null,
+              "utm_source": null,
+              "utm_medium": null,
+              "utm_content": null,
+              "utm_term": null,
+              "salesforce_uuid": null
+            },
+            "updated_at": "2025-11-16T22:30:40.539980Z",
+            "uri": "https://api.calendly.com/scheduled_events/c2045fa6-291c-4da4-9be5-032e4a1b86f7/invitees/3cdc5f32-a755-411c-a1fa-4bd0de4d506a"
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Calendly Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "setData": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "setData",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a record": {
+      "main": [
+        [
+          {
+            "node": "AI Personalization1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Personalization1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "bab15aa7-c06d-4a6f-988e-2cf19c7428ee",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c8eecab2852e4e42d78d2b006db15b566dd9006d1c148c75b3a0e8d3d0b21f6c"
+  },
+  "id": "vjSRktvj4s0IxyzU",
+  "tags": []
+}
